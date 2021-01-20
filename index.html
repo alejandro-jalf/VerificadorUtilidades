@@ -4,13 +4,97 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Verificador de utilidades</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="./css/index.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 <body>
-    <div id="app">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary text-white">
+        <a class="navbar-brand">
+            <img src="./images/cesta.png" alt="" width="40px">
+            SPA
+        </a>
+    </nav>
+    <div id="app" class="container">
+        <h1 class="text-center" id=>Verificador de procentaje de utilidades</h1>
+        <div class="form-group row">
+            <div class="input-group col-sm-10 mb-2">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">Sucursal</span>
+                </div>
+                <select id="selectSuc" class="form-control" v-model="sucurzal">
+                    <option value="ZR">Zaragoza</option>
+                    <option value="VC">Victoria</option>
+                    <option value="OU">Oluta</option>
+                    <option value="JL">Jaltipan</option>
+                </select>
+            </div>
+            <button class="btn btn-success mb-2" type="button">Verificar</button>
+        </div>
 
+        <table class="table table-light table-responsive"  id="tableDataId">
+            <thead class="thead-dark">
+                <tr v-if="low" class="fixedHeader" id="headerTableId">
+                    <th id="hart_fix">Articulo</th>
+                    <th id="hcod_fix">Codigo_de_Barras</th>
+                    <th id="hnom_fix">Nombre</th>
+                    <th id="hexi_fix">Existencia</th>
+                    <th id="hcos_fix">Ultimo_Costo</th>
+                    <th id="hpr1_fix">Precio_1</th>
+                    <th id="hut1_fix">Utilidad_1</th>
+                    <th id="hpr2_fix">Precio_2</th>
+                    <th id="hut2_fix">Utilidad_2</th>
+                </tr>
+                <tr>
+                    <th id="hart">Articulo</th>
+                    <th id="hcod">Codigo_de_Barras</th>
+                    <th id="hnom">Nombre</th>
+                    <th id="hexi">Existencia</th>
+                    <th id="hcos">Ultimo_Costo</th>
+                    <th id="hpr1">Precio_1</th>
+                    <th id="hut1">Utilidad_1</th>
+                    <th id="hpr2">Precio_2</th>
+                    <th id="hut2">Utilidad_2</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(articulo, index) in dataUtilidades">
+                    <td>{{ articulo.articulo }}</td>
+                    <td>{{ articulo.codigoBarras }}</td>
+                    <td>{{ articulo.nombre }}</td>
+                    <td>{{ utils.aplyFormatNumeric(utils.roundTo(articulo.costo, 3)) }}</td>
+                    <td>${{ utils.aplyFormatNumeric(utils.roundTo(articulo.existencia, 3)) }}</td>
+                    <td>${{ utils.aplyFormatNumeric(utils.roundTo(articulo.precio1)) }}</td>
+                    <td :class="setClass(articulo.u1)">{{ utils.parseToPorcent(utils.roundTo(articulo.u1)) }} %</td>
+                    <td>${{ utils.aplyFormatNumeric(utils.roundTo(articulo.precio2)) }}</td>
+                    <td :class="setClass(articulo.u2)">{{ utils.parseToPorcent(utils.roundTo(articulo.u2)) }} %</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr id="totalIdFoot">
+                    <th>Total</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th ref="totalU1">{{ getTotal1 }}</th>
+                    <th></th>
+                    <th ref="totalU2">{{ getTotal2 }}</th>
+                </tr>
+            </tfoot>
+        </table>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <script>
+        var utils = () => {};
+    </script>
+    <script src="./js/utils.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2"></script> -->
     <script src="./js/app.js"></script>
 </body>
 </html>
