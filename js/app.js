@@ -3,6 +3,7 @@ var app = new Vue({
     data() {
         return {
             sucurzal: 'ZR',
+            nameSucursal: 'Zaragoza',
             dataUtilidades: [
                 {articulo: "0118106", codigoBarras: "7501021146102", nombre: "Pastilla Des. Aglay Pino 80gr", costo: "11.000000",	existencia: "8.787348",	precio1: "11.000000",	u1: "0.20115018181819",	precio2 :"9.350000"	, u2: "0.06017668449198"},
                 {articulo: "0850001", codigoBarras: "0850001", nombre: "Marg Primavera Sal 90gr", costo: "1056.000000",	existencia: "10.625000",	precio1: "12.500000",	u1: "0.15000000000000",	precio2 :"11.700000"	, u2: "0.09188034188035"},
@@ -57,6 +58,12 @@ var app = new Vue({
             utils: utils,
             low: false,
             topTable: 200,
+            alert: {
+                show: false,
+                title: 'Ruta no encontrada',
+                message: 'Error 404, La direccion url que ingreso en el navegador es incorrecto',
+                info: 'Necesita verificar la ruta proporcionada por el encargado',
+            },
         }
     },
     mounted() {
@@ -83,6 +90,8 @@ var app = new Vue({
                 document.getElementById("headerTableId").style.left = `${distanciaLeftFooter}px`;
             }
         });
+
+        this.setSucurzal();
     },
     updated() {
         if (this.low) {
@@ -108,6 +117,89 @@ var app = new Vue({
         },
     },
     methods: {
+        showAlert(title, message, info) {
+            this.alert.show = true;
+            this.alert.title = title;
+            this.alert.message = message;
+            this.alert.info = info;
+        },
+        setSucurzal() {
+            // Formato de la ruta:
+            // https://../index.html#sucursal?encoded=0000
+            const ruta = (window.location.href).split("#");
+            if (ruta.length <= 1 || ruta.length >= 3) {
+                this.showAlert(
+                    'Ruta no localizada',
+                    'Error 404, La direccion url ingresada en el navegador no esta de manera correcta',
+                    'Verifique la ruta proporcionada por el encargado'
+                );
+                return;
+            }
+            const data = ruta[1].split("?")
+            if (data.length !== 2) {
+                this.showAlert(
+                    'Error al ingresar la url',
+                    'Error 400, La estructura de la direccion url no esta escrita de manera correcta, hace falta que defina encoded y sucursal',
+                    'Caracter "?" no localizado'
+                );
+                return;
+            }
+
+            if (data[1].length < 8 ) {
+                this.showAlert(
+                    'Datos extras son invalidos',
+                    'Error 400, La estructura de la direccion url no esta escrita de manera correcta, hace falta que de defina encoded',
+                    'Datos de encoded estan mal escritos en la url'
+                );
+                return;
+            }
+
+            const noValidEncoded = () => {
+                this.showAlert(
+                    'Codigo de encargado incorrecto',
+                    'Error 401, El encoded enviado no es valido, necesita validar que es usted el encargado de tienda',
+                    'No tiene el codigo de autorizacion para ver los datos',
+                );
+            }
+
+            if (data[0].toUpperCase().trim() === "ZR") {
+                if (data[1].slice(8).trim() === "117e1218aed75707c73d3d78026d3c7ac4e6187f") {
+                    this.nameSucursal = "Zaragoza";
+                    this.sucurzal = "ZR";
+                } else noValidEncoded();
+                return;
+            }
+
+            if (data[0].toUpperCase().trim() === "VC") {
+                if (data[1].slice(8).trim() === "dd2e1300fb38460706d24e5154b5593f979cd7f1") {
+                    this.nameSucursal = "Victoria";
+                    this.sucurzal = "VC";
+                } else noValidEncoded();
+                return;
+            }
+            
+            if (data[0].toUpperCase().trim() === "OU") {
+                if (data[1].slice(8).trim() === "10272bf74b28f4859e99660e65bd8bd42f56fd3c") {
+                    this.nameSucursal = "Oluta";
+                    this.sucurzal = "OU";
+                } else noValidEncoded();
+                return;
+            }
+
+            if (data[0].toUpperCase().trim() === "JL") {
+                if (data[1].slice(8).trim() === "177b7c9d74171b75b04e16ade125f410509b6d74") {
+                    this.nameSucursal = "Jaltipan";
+                    this.sucurzal = "JL";
+                } else noValidEncoded();
+                return;
+            }
+
+            this.showAlert(
+                'Sucursal no localizada',
+                'La sucursal que intenta localizar no existe en nuestros registros',
+                'Verfique si las siglas de la sucursal son correctas'
+            );
+        },
         setClass(utilidad) {
             if (utilidad === "NULL") return "bg-warning";
             if (parseFloat(utilidad) < 0.1) return "bg-warning";
@@ -128,6 +220,5 @@ var app = new Vue({
             console.log(referencia);
             // return referencia.getWindowWidth();
         },
-// {precio1: "8.000000",	u1: "0.14062500000000",	precio2 :"7.600000"	, u2: "0.09539473684211"},
     },
 });

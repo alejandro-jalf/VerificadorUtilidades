@@ -6,6 +6,7 @@
     <title>Verificador de utilidades</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link rel="stylesheet" href="./css/index.css">
+    <link rel="shortcut icon" href="./images/porcentaje.png" type="image/x-icon">
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
@@ -20,22 +21,24 @@
     </nav>
     <div id="app" class="container">
         <h1 class="text-center" id=>Verificador de procentaje de utilidades</h1>
-        <div class="form-group row">
+        <div v-if="!alert.show" class="form-group row">
             <div class="input-group col-sm-10 mb-2">
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="basic-addon1">Sucursal</span>
                 </div>
-                <select id="selectSuc" class="form-control" v-model="sucurzal">
-                    <option value="ZR">Zaragoza</option>
-                    <option value="VC">Victoria</option>
-                    <option value="OU">Oluta</option>
-                    <option value="JL">Jaltipan</option>
-                </select>
+                <input class="form-control bg-light" type="text" name="" readonly v-model="nameSucursal">
             </div>
             <button class="btn btn-success mb-2" type="button">Verificar</button>
         </div>
 
-        <table class="table table-light table-responsive"  id="tableDataId">
+        <div v-if="alert.show" class="alert alert-danger" role="alert">
+            <h4 class="alert-heading">{{ alert.title }}</h4>
+            <p>{{ alert.message }}</p>
+            <hr>
+            <p class="mb-0">{{ alert.info }}</p>
+        </div>
+
+        <table v-if="!alert.show" class="table table-light table-responsive"  id="tableDataId">
             <thead class="thead-dark">
                 <tr v-if="low" class="fixedHeader" id="headerTableId">
                     <th id="hart_fix">Articulo</th>
@@ -88,7 +91,7 @@
             </tfoot>
         </table>
     </div>
-
+    
     <script>
         var utils = () => {};
     </script>
