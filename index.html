@@ -75,9 +75,9 @@
                     <td>{{ utils.aplyFormatNumeric(utils.roundTo(articulo.costo, 3)) }}</td>
                     <td>${{ utils.aplyFormatNumeric(utils.roundTo(articulo.existencia, 3)) }}</td>
                     <td>${{ utils.aplyFormatNumeric(utils.roundTo(articulo.precio1)) }}</td>
-                    <td :class="setClass(articulo.u1)">{{ utils.parseToPorcent(utils.roundTo(articulo.u1)) }} %</td>
+                    <td :class="setClass(articulo.u1)">{{ utils.parseToPorcent(utils.roundTo(articulo.u1 ,4)) }} %</td>
                     <td>${{ utils.aplyFormatNumeric(utils.roundTo(articulo.precio2)) }}</td>
-                    <td :class="setClass(articulo.u2)">{{ utils.parseToPorcent(utils.roundTo(articulo.u2)) }} %</td>
+                    <td :class="setClass(articulo.u2)">{{ utils.parseToPorcent(utils.roundTo(articulo.u2, 4)) }} %</td>
                 </tr>
             </tbody>
             <tfoot>

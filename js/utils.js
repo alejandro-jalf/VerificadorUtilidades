@@ -100,22 +100,15 @@ utils = (() => {
         digitRounded = parseInt(endDigit)
       }
     }
-    rounded = arrayDivision[0] + '.' + digitsString + digitRounded
+    // console.log(number, digitToRound, typeof digitToRound, endDigit);
+    rounded = arrayDivision[0] + '.' + digitsString + digitRounded;
     return rounded
   }
 
   const parseToPorcent = (value) => {
     // example: 0.45
-    const stringValue = value.toString()
-    const arrayValue = stringValue.split('.')
-    if (value < 0) {
-      return -parseInt(arrayValue[1])
-    }
-    if (arrayValue[1].length > 2) {
-      arrayValue[1] = `${arrayValue[1].slice(0, 2)}.${arrayValue[1].slice(2)}`
-      return parseFloat(arrayValue[1])
-    }
-    return parseInt(arrayValue[1])
+    const parseado = (Math.floor(value * 10000))/100;
+    return parseado;
   }
 
   return {
