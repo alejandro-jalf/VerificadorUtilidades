@@ -24,13 +24,19 @@
         </a>
     </nav>
     <div id="app" class="container">
-        <h1 class="text-center" id=>Verificador de procentaje de utilidades</h1>
+        <h1 class="text-center mt-2 mb-2" id="h1Title">Verificador de procentaje de utilidades</h1>
         <div v-if="!alert.show" class="form-group row">
-            <div class="input-group col-sm-10 mb-2">
+            <div class="input-group col-sm-10 mb-2" id="sucursalID">
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="basic-addon1">Sucursal</span>
                 </div>
-                <input class="form-control bg-light" type="text" name="" readonly v-model="nameSucursal">
+                <select v-if="isVisibleSelect" id="my-select" class="form-control" v-model="sucurzal">
+                    <option value="ZR">Zaragoza</option>
+                    <option value="VC">Victoria</option>
+                    <option value="OU">Oluta</option>
+                    <option value="JL">Jaltipan</option>
+                </select>
+                <input v-if="!isVisibleSelect" class="form-control bg-light" type="text" readonly v-model="nameSucursal">
             </div>
             <button class="btn btn-success mb-2" type="button">Verificar</button>
         </div>

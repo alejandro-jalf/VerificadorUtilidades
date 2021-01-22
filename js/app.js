@@ -64,6 +64,7 @@ var app = new Vue({
                 message: 'Error 404, La direccion url que ingreso en el navegador es incorrecto',
                 info: 'Necesita verificar la ruta proporcionada por el encargado',
             },
+            isVisibleSelect: false,
         }
     },
     mounted() {
@@ -125,8 +126,8 @@ var app = new Vue({
         },
         setSucurzal() {
             // Formato de la ruta:
-            // https://../index.html#sucursal?encoded=0000
-            const ruta = (window.location.href).split("#");
+            // https://../index.html?sucursal=any&encoded=has_encript
+            const ruta = (window.location.href).split("?");
             if (ruta.length <= 1 || ruta.length >= 3) {
                 this.showAlert(
                     'Ruta no localizada',
@@ -135,7 +136,7 @@ var app = new Vue({
                 );
                 return;
             }
-            const data = ruta[1].split("?")
+            const data = ruta[1].split("&");
             if (data.length !== 2) {
                 this.showAlert(
                     'Error al ingresar la url',
@@ -154,6 +155,15 @@ var app = new Vue({
                 return;
             }
 
+            if (data[0].length < 9 || (data[0].slice(0, 8) !== "sucursal") ) {
+                this.showAlert(
+                    'Datos extras son invalidos',
+                    'Error 400, La estructura de la direccion url no esta escrita de manera correcta, hace falta que de defina sucursal',
+                    'Datos de encoded estan mal escritos en la url'
+                );
+                return;
+            }
+
             const noValidEncoded = () => {
                 this.showAlert(
                     'Codigo de encargado incorrecto',
@@ -162,7 +172,17 @@ var app = new Vue({
                 );
             }
 
-            if (data[0].toUpperCase().trim() === "ZR") {
+            if ((data[0].toUpperCase().trim()).slice(9) === "ALL") {
+                if (data[1].slice(8).trim() === "a1a17e12d3a2517a0d3f1e5e69ea3356fde13f34") {
+                    this.sucurzal = "ZR";
+                    this.isVisibleSelect = true;
+                } else noValidEncoded();
+                return;
+            }
+
+            this.isVisibleSelect = false;
+
+            if ((data[0].toUpperCase().trim()).slice(9) === "ZR") {
                 if (data[1].slice(8).trim() === "117e1218aed75707c73d3d78026d3c7ac4e6187f") {
                     this.nameSucursal = "Zaragoza";
                     this.sucurzal = "ZR";
@@ -170,7 +190,7 @@ var app = new Vue({
                 return;
             }
 
-            if (data[0].toUpperCase().trim() === "VC") {
+            if ((data[0].toUpperCase().trim()).slice(9) === "VC") {
                 if (data[1].slice(8).trim() === "dd2e1300fb38460706d24e5154b5593f979cd7f1") {
                     this.nameSucursal = "Victoria";
                     this.sucurzal = "VC";
@@ -178,7 +198,7 @@ var app = new Vue({
                 return;
             }
             
-            if (data[0].toUpperCase().trim() === "OU") {
+            if ((data[0].toUpperCase().trim()).slice(9) === "OU") {
                 if (data[1].slice(8).trim() === "10272bf74b28f4859e99660e65bd8bd42f56fd3c") {
                     this.nameSucursal = "Oluta";
                     this.sucurzal = "OU";
@@ -186,7 +206,7 @@ var app = new Vue({
                 return;
             }
 
-            if (data[0].toUpperCase().trim() === "JL") {
+            if ((data[0].toUpperCase().trim()).slice(9) === "JL") {
                 if (data[1].slice(8).trim() === "177b7c9d74171b75b04e16ade125f410509b6d74") {
                     this.nameSucursal = "Jaltipan";
                     this.sucurzal = "JL";
